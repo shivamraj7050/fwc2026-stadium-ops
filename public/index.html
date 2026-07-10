@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArenaMinds 2026 - Stadium Operations & Fan Hub</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-icon">⚽</div>
+        <div class="brand-text">
+          <h1>ArenaMinds</h1>
+          <span>FIFA WORLD CUP 2026</span>
+        </div>
+      </div>
+      
+      <nav class="nav-links">
+        <button class="nav-btn active" data-tab="dashboard">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-btn" data-tab="fan-companion">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Fan Companion
+        </button>
+        <button class="nav-btn" data-tab="staff-ops">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+          Staff Dispatch
+        </button>
+        <button class="nav-btn" data-tab="command-center">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          AI Command Center
+        </button>
+        <button class="nav-btn" data-tab="sustainability">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Eco Hub
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="simulator-panel">
+          <div class="sim-header">
+            <span>Match Day Simulator</span>
+            <span class="status-dot pulsing" id="sim-status">LIVE</span>
+          </div>
+          <p class="sim-desc">Simulates dynamic stadium crowds and concession queue movements.</p>
+          <button class="btn btn-secondary btn-sm" id="btn-simulate">Trigger Simulation Step</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top header bar -->
+      <header class="topbar">
+        <div class="page-title">
+          <h2 id="current-tab-title">Stadium Overview</h2>
+          <p id="current-tab-subtitle">Real-time telemetry and stadium health index.</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="system-badge">
+            <span class="badge-label">AI Status:</span>
+            <span class="badge-value" id="ai-status-indicator">Checking...</span>
+          </div>
+          <div class="time-badge">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="stadium-time">23:25</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD VIEW -->
+      <section id="dashboard" class="tab-view active">
+        <!-- Stats Row -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrapper blue">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <div class="stat-info">
+              <h3>Total Occupancy</h3>
+              <p class="stat-value" id="stat-occupancy">0 / 0</p>
+              <div class="progress-bar-container">
+                <div class="progress-bar" id="occupancy-progress" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrapper green">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="stat-info">
+              <h3>Concession Queue Avg</h3>
+              <p class="stat-value" id="stat-queue">0 mins</p>
+              <span class="stat-subtext text-green">Stands operational</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrapper red">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="stat-info">
+              <h3>Active Incidents</h3>
+              <p class="stat-value" id="stat-incidents">0</p>
+              <span class="stat-subtext text-red" id="stat-critical-alerts">0 Critical Alerts</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrapper teal">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="stat-info">
+              <h3>Eco points logged</h3>
+              <p class="stat-value" id="stat-eco">0</p>
+              <span class="stat-subtext text-teal">Fans recycling active</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Stadium Map Area -->
+          <div class="card map-card">
+            <div class="card-header">
+              <h3>Interactive Stadium Density Blueprint</h3>
+              <span class="badge badge-outline">Live Heatmap</span>
+            </div>
+            <div class="card-body map-body">
+              <!-- SVG Stadium map visualization -->
+              <svg id="stadium-map" viewBox="0 0 600 400" class="stadium-svg">
+                <!-- Outermost boundary -->
+                <rect x="10" y="10" width="580" height="380" rx="30" class="map-outline" />
+                <!-- Pitch -->
+                <rect x="200" y="130" width="200" height="140" rx="5" class="map-pitch" />
+                <circle cx="300" cy="200" r="30" class="map-pitch-lines" />
+                <line x1="300" y1="130" x2="300" y2="270" class="map-pitch-lines" />
+                
+                <!-- Sectors -->
+                <path d="M 60 70 A 250 200 0 0 1 540 70 L 440 120 A 150 100 0 0 0 160 120 Z" class="sector" id="map-sec-b" data-id="sec-b" />
+                <path d="M 540 70 A 250 200 0 0 1 540 330 L 440 280 A 150 100 0 0 0 440 120 Z" class="sector" id="map-sec-c" data-id="sec-c" />
+                <path d="M 540 330 A 250 200 0 0 1 60 330 L 160 280 A 150 100 0 0 0 440 280 Z" class="sector" id="map-sec-d" data-id="sec-d" />
+                <path d="M 60 330 A 250 200 0 0 1 60 70 L 160 120 A 150 100 0 0 0 160 280 Z" class="sector" id="map-sec-a" data-id="sec-a" />
+                
+                <!-- Sector Text Labels -->
+                <text x="300" y="55" class="map-label">SECTOR B (North Stand)</text>
+                <text x="490" y="205" class="map-label label-vertical">SECTOR C (East)</text>
+                <text x="300" y="355" class="map-label">SECTOR D (South Stand)</text>
+                <text x="110" y="205" class="map-label label-vertical">SECTOR A (West)</text>
+
+                <!-- Gate Nodes -->
+                <circle cx="50" cy="50" r="14" class="gate-node" id="map-gate-1" data-id="gate-1" />
+                <text x="50" y="54" class="gate-label">G1</text>
+
+                <circle cx="550" cy="50" r="14" class="gate-node" id="map-gate-2" data-id="gate-2" />
+                <text x="550" y="54" class="gate-label">G2</text>
+
+                <circle cx="550" cy="350" r="14" class="gate-node" id="map-gate-3" data-id="gate-3" />
+                <text x="550" y="350" class="gate-label">G3</text>
+
+                <circle cx="50" cy="350" r="14" class="gate-node" id="map-gate-4" data-id="gate-4" />
+                <text x="50" y="354" class="gate-label">G4</text>
+              </svg>
+              <div class="map-legend">
+                <span class="legend-item"><span class="legend-dot green"></span> Normal (&lt;75%)</span>
+                <span class="legend-item"><span class="legend-dot yellow"></span> Warning (75-90%)</span>
+                <span class="legend-item"><span class="legend-dot red"></span> Congested (&gt;90%)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Concession Queues -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Concession & Merch Queues</h3>
+              <span class="badge badge-neutral" id="concession-status-tag">Monitoring</span>
+            </div>
+            <div class="card-body">
+              <div class="concession-list" id="dashboard-concessions-list">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zones detail table -->
+        <div class="card table-card">
+          <div class="card-header">
+            <h3>Sector & Entry Gate Telemetry</h3>
+          </div>
+          <div class="card-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Zone Name</th>
+                  <th>Type</th>
+                  <th>Capacity</th>
+                  <th>Current Occupancy</th>
+                  <th>Fill Ratio</th>
+                  <th>Status Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-zones-tbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: FAN COMPANION VIEW -->
+      <section id="fan-companion" class="tab-view">
+        <div class="dashboard-grid grid-2-1">
+          <!-- Multilingual Chat Assistant -->
+          <div class="card chat-card">
+            <div class="card-header">
+              <div class="chat-header-title">
+                <h3>ArenaBot - FIFA AI Companion</h3>
+                <span class="badge badge-green">Online</span>
+              </div>
+              <p class="chat-subtitle">Ask anything in English, Español, Français, Deutsch, etc.</p>
+            </div>
+            <div class="card-body chat-body" id="chat-messages">
+              <div class="chat-msg system">
+                <div class="msg-avatar">🤖</div>
+                <div class="msg-bubble">
+                  <p>Welcome to the 2026 Host Stadium! I'm here to assist you with navigation, transport, tickets, and accessibility queries. How can I help you today?</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat-suggestions">
+              <button class="chip-suggestion">🚇 How do I get to Gate 1?</button>
+              <button class="chip-suggestion">♿️ Accessible routes</button>
+              <button class="chip-suggestion">🌱 How do I earn recycling points?</button>
+              <button class="chip-suggestion">🌮 Best food stands</button>
+            </div>
+            <div class="chat-footer">
+              <form id="chat-form">
+                <input type="text" id="chat-input" placeholder="Type your stadium or travel query..." required autocomplete="off">
+                <button type="submit" class="btn btn-primary">
+                  <svg class="icon icon-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Transit & Accessibility Side Cards -->
+          <div class="flex-column-gap">
+            <!-- Travel Guide -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Smart Route & Gate Planner</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="travel-origin">Your Location / Origin:</label>
+                  <select id="travel-origin" class="form-input">
+                    <option value="metro-1">Metro Line 1 (Central Link)</option>
+                    <option value="metro-2">Metro Line 2 (West Link)</option>
+                    <option value="parking-a">North Parking Lot A</option>
+                    <option value="parking-b">South Parking Lot B</option>
+                    <option value="shuttle">Airport Transit Shuttle</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="travel-needs">Accessibility Requirements:</label>
+                  <select id="travel-needs" class="form-input">
+                    <option value="none">Standard Route (Stairs & Escalators)</option>
+                    <option value="mobility">Step-Free Access (Wheelchair / Elevators)</option>
+                    <option value="stroller">Stroller / Family Friendly</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary w-100" id="btn-plan-route">Generate AI Transit Suggestion</button>
+                
+                <div class="route-result hidden" id="route-result-box">
+                  <h4>AI Travel Recommendation</h4>
+                  <p id="route-result-text"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Eco Action Logger -->
+            <div class="card">
+              <div class="card-header">
+                <h3>🌱 Log Sustainability Action</h3>
+              </div>
+              <div class="card-body">
+                <form id="eco-form">
+                  <div class="form-group">
+                    <label for="eco-username">Fan Username:</label>
+                    <input type="text" id="eco-username" class="form-input" placeholder="Enter username..." required>
+                  </div>
+                  <div class="form-group">
+                    <label for="eco-action">Choose Your Eco Action:</label>
+                    <select id="eco-action" class="form-input">
+                      <option value="Recycled Plastic Bottle">Recycled Plastic Bottle (50 points)</option>
+                      <option value="Recycled Aluminum Can">Recycled Aluminum Can (50 points)</option>
+                      <option value="Used Compostable Food Container">Used Compostable Container (30 points)</option>
+                      <option value="Traveled via Metro / Rail">Traveled via Metro/Rail (100 points)</option>
+                      <option value="Returned Reusable beverage cup">Returned Reusable Cup (30 points)</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-teal w-100">Log Eco Points</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: STAFF DISPATCH VIEW -->
+      <section id="staff-ops" class="tab-view">
+        <div class="dashboard-grid">
+          
+          <!-- Incident Submission (GenAI Parser) -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Report New Stadium Incident</h3>
+              <span class="badge badge-accent">GenAI Dispatcher Enabled</span>
+            </div>
+            <div class="card-body">
+              <p class="card-description">Type a raw description of the issue. The GenAI parses severity, category, assigns the task to the right team, and outputs an operational protocol.</p>
+              <form id="incident-form">
+                <div class="form-group">
+                  <label for="incident-location">Specific Location:</label>
+                  <input type="text" id="incident-location" class="form-input" placeholder="e.g. Sector B Concourse near Food Stand 2" required>
+                </div>
+                <div class="form-group">
+                  <label for="incident-desc">Incident Description:</label>
+                  <textarea id="incident-desc" class="form-input" rows="4" placeholder="Describe the problem, e.g. 'A spectator fainted near Sector B Row 8, needs urgent medical attention.' or 'Water leaking from ceiling onto Sector A escalator causing a slip risk.'" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="btn-report-incident">
+                  Analyze & Dispatch Incident
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Active Incidents Feed & AI Response Protocols -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Incident Response Command center</h3>
+            </div>
+            <div class="card-body">
+              <div class="incident-queue" id="incident-queue-list">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: AI COMMAND CENTER (ORGANIZERS) -->
+      <section id="command-center" class="tab-view">
+        <div class="card command-card">
+          <div class="card-header">
+            <h3>FIFA World Cup 2026 - GenAI Operations Assistant</h3>
+            <p class="card-description">Run natural language queries across live database state (crowd densities, incidents, concession waiting times) to draft broadcast alerts, fetch reports, or receive real-time action recommendations.</p>
+          </div>
+          <div class="card-body command-body" id="command-output-area">
+            <div class="terminal-welcome">
+              <p class="text-teal">⚽ ARENAMINDS COMMAND SYSTEM v2026.1</p>
+              <p>Type any inquiry to get operational summaries, statistics, or announcements.</p>
+              <p><strong>Suggested Queries:</strong></p>
+              <ul>
+                <li>"List all facilities issues and check their severity"</li>
+                <li>"Draft a broadcast warning message about Sector B gate congestion"</li>
+                <li>"Which concession stands are busiest and what is their status?"</li>
+                <li>"Give me a summary of overall stadium health indicators"</li>
+              </ul>
+            </div>
+          </div>
+          <div class="command-footer">
+            <form id="command-form">
+              <span class="terminal-prompt">&gt;</span>
+              <input type="text" id="command-input" placeholder="Enter operations command or inquiry..." required autocomplete="off">
+              <button type="submit" class="btn btn-teal">Run Intelligence</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: ECO HUB (SUSTAINABILITY) -->
+      <section id="sustainability" class="tab-view">
+        <div class="dashboard-grid">
+          <!-- Sustainability Stats Card -->
+          <div class="card text-center flex-center-column">
+            <div class="eco-badge">🌱</div>
+            <h2 class="eco-points-title" id="eco-total-display">0</h2>
+            <h3>Total Points Logged by Fans</h3>
+            <p class="card-description">Every action taken by spectators reduces the environmental footprint of the FIFA World Cup 2026 tournament. Points are accumulated for recycling, composting, and using public transport.</p>
+            
+            <div class="eco-metrics">
+              <div class="eco-metric">
+                <span class="eco-metric-val" id="metric-bottles">0</span>
+                <span class="eco-metric-lbl">Bottles Recycled</span>
+              </div>
+              <div class="eco-metric">
+                <span class="eco-metric-val" id="metric-carbon">0 kg</span>
+                <span class="eco-metric-lbl">Estimated CO₂ Saved</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leaderboard Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Eco-Fan Leaderboard</h3>
+              <span class="badge badge-teal">Top Fans</span>
+            </div>
+            <div class="card-body">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Points</th>
+                    <th>Actions Logged</th>
+                  </tr>
+                </thead>
+                <tbody id="sustainability-leaderboard-tbody">
+                  <!-- Loaded via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
